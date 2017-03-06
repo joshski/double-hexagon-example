@@ -19,6 +19,15 @@ stores.forEach(function(Store) {
       if (store.stop) { await store.stop() }
     })
 
+    it('assigns accountNumbers when creating accounts', async function () {
+      const account1 = { balance: 123 }
+      const account2 = { balance: 456 }
+      await store.createAccount(account1)
+      await store.createAccount(account2)
+      assert.equal(account1.accountNumber, 1)
+      assert.equal(account2.accountNumber, 2)
+    })
+
     it('stores and retrieves accounts', async function () {
       const account1 = { accountNumber: 1, balance: 0 }
       const account2 = { accountNumber: 2, balance: 123 }

@@ -38,11 +38,13 @@ app, first directly targeting the domain logic, secondly targeting the HTTP API:
 
 ```
   AccountStore (MemoryAccountStore)
+    ✓ assigns accountNumbers when creating accounts
     ✓ stores and retrieves accounts
     ✓ gets different account objects for the same account number
     ✓ stores copies of accounts
 
   AccountStore (FlatFileAccountStore)
+    ✓ assigns accountNumbers when creating accounts
     ✓ stores and retrieves accounts
     ✓ gets different account objects for the same account number
     ✓ stores copies of accounts
@@ -68,7 +70,7 @@ app, first directly targeting the domain logic, secondly targeting the HTTP API:
       ✓ increases the balance of the receiver account
 
 
-  14 passing (171ms)
+  16 passing (239ms)
 ```
 
 Use the `-f` flag to run a subset for a particular hexagon-pair:

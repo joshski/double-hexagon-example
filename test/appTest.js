@@ -8,7 +8,7 @@ appFactories.forEach(function(appFactory) {
     let app, client
 
     beforeEach(async function () {
-      app = await appFactory.createApp()
+      app = appFactory.createApp()
       client = await app.createClient()
     })
 

@@ -2,6 +2,7 @@ const BankApp = require('../../lib/app/bankApp')
 const BankServer = require('../../lib/web/server/BankServer')
 const BankApiClient = require('./clients/bankApiClient')
 const MemoryAccountStore = require('../../lib/stores/accounts/memoryAccountStore')
+const FlatFileAccountStore = require('../../lib/stores/accounts/flatFileAccountStore')
 
 class AppFactory {
   constructor(options) {
@@ -15,7 +16,7 @@ class AppFactory {
     return `${this.options.type.name} (${components})`
   }
 
-  async createApp() {
+  createApp() {
     const AppConfiguration = this.options.type
     const components = {}
     Object.keys(this.options.components).forEach(name => {
@@ -32,7 +33,7 @@ class AppConfiguration {
   }
 }
 
-class Core extends AppConfiguration {
+class AppCore extends AppConfiguration {
   async createClient() {
     this.app = new BankApp(this.components)
     await this.app.start()
@@ -43,7 +44,7 @@ class Core extends AppConfiguration {
   }
 }
 
-class Api extends AppConfiguration {
+class AppViaApi extends AppConfiguration {
   async createClient() {
     this.app = new BankApp(this.components)
     await this.app.start()
@@ -58,8 +59,10 @@ class Api extends AppConfiguration {
 }
 
 const appFactories = [
-  { type: Core, components: { accountStore: MemoryAccountStore } },
-  { type: Api,  components: { accountStore: MemoryAccountStore } }
+  { type: AppCore,   components: { accountStore: MemoryAccountStore } },
+  { type: AppCore,   components: { accountStore: FlatFileAccountStore } },
+  { type: AppViaApi, components: { accountStore: MemoryAccountStore } },
+  { type: AppViaApi, components: { accountStore: FlatFileAccountStore } }
 ].map(options => new AppFactory(options))
 
 module.exports = appFactories

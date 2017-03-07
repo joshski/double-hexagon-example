@@ -1,6 +1,10 @@
+const http = require('httpism')
+const ajax = require('httpism/browser')
 const BankApp = require('../../lib/app/bankApp')
-const BankServer = require('../../lib/web/server/BankServer')
+const BankServer = require('../../lib/web/server/bankServer')
+const BankDomApp = require('../../lib/web/client/bankDomApp')
 const BankApiClient = require('./clients/bankApiClient')
+const BankDomClient = require('./clients/bankDomClient')
 const MemoryAccountStore = require('../../lib/stores/accounts/memoryAccountStore')
 const FlatFileAccountStore = require('../../lib/stores/accounts/flatFileAccountStore')
 
@@ -50,7 +54,7 @@ class AppViaApi extends AppConfiguration {
     await this.app.start()
     this.server = new BankServer(this.app)
     await this.server.start(6661)
-    return new BankApiClient(this.server.url)
+    return new BankApiClient(http, this.server.url)
   }
   async stop() {
     await this.app.stop()
@@ -58,11 +62,36 @@ class AppViaApi extends AppConfiguration {
   }
 }
 
-const appFactories = [
+class AppViaDom extends AppConfiguration {
+  async createClient() {
+    this.app = new BankApp(this.components)
+    await this.app.start()
+    this.server = new BankServer(this.app)
+    await this.server.start(6662)
+    this.apiClient = new BankApiClient(ajax, this.server.url)
+    this.element = document.createElement('div')
+    document.body.appendChild(this.element)
+    this.domApp = new BankDomApp(this.element, this.apiClient)
+    return new BankDomClient(this.element)
+  }
+  async stop() {
+    await this.server.stop()
+    await this.app.stop()
+  }
+}
+
+const appConfigurations = [
   { type: AppCore,   components: { accountStore: MemoryAccountStore } },
   { type: AppCore,   components: { accountStore: FlatFileAccountStore } },
   { type: AppViaApi, components: { accountStore: MemoryAccountStore } },
   { type: AppViaApi, components: { accountStore: FlatFileAccountStore } }
-].map(options => new AppFactory(options))
+]
+
+if (typeof window !== 'undefined') {
+  appConfigurations.push({ type: AppViaDom, components: { accountStore: MemoryAccountStore } })
+  appConfigurations.push({ type: AppViaDom, components: { accountStore: FlatFileAccountStore } })
+}
+
+appFactories = appConfigurations.map(options => new AppFactory(options))
 
 module.exports = appFactories

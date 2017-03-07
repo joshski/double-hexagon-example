@@ -11,11 +11,15 @@
   "author": "@joshski",
   "license": "MIT",
   "devDependencies": {
+    "browser-monkey": "^2.4.1",
+    "electron": "^1.6.1",
+    "electron-mocha": "^3.3.0",
     "httpism": "^2.7.0",
     "mocha": "^3.2.0"
   },
   "dependencies": {
     "body-parser": "^1.17.0",
-    "express": "^4.15.0"
+    "express": "^4.15.0",
+    "hyperdom": "^0.2.0"
   }
 }

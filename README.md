@@ -33,6 +33,15 @@ can run against three different targets:
   * [BankDomApp](./lib/web/client/bankDomApp.js) exposes the same behaviour as a
     [hyperdom](https://github.com/featurist/hyperdom) browser app
 
+To make the same tests run against these alternative implementations, the tests
+themselves need adapters (hence the _double_ hexagon):
+
+   * [BankApiClient](./test/support/clients/bankApiClient.js) connects the tests
+     to the HTTP API using [httpism](https://github.com/featurist/httpism).
+   * [BankDomClient](./test/support/clients/bankDomClient.js) connects the same
+     tests to the browser app, using
+     [browser-monkey](https://github.com/featurist/browser-monkey).
+
 ## Running the tests
 
 Run the core tests using the mocha shim:

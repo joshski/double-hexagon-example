@@ -30,7 +30,7 @@ can run against three different targets:
   * [BankApp](./lib/app/bankApp.js) talks to the domain (via a store)
   * [BankServer](./lib/web/server/bankServer.js) exposes the same behaviour as
     a collection of [web routes](./lib/web/server/bankRoutes.js)
-  * [BankDomApp](./lib/client/bankDomApp.js) exposes the same behaviour as a
+  * [BankDomApp](./lib/web/client/bankDomApp.js) exposes the same behaviour as a
     [hyperdom](https://github.com/featurist/hyperdom) browser app
 
 ## Running the tests

@@ -24,9 +24,18 @@ There are two implementations of the `AccountStore` contract:
 These are covered by the same [contract test](./test/accountStoreTest.js) that
 ensures they are interchangeable.
 
+There are three implementations of the `BankApp` interface, so the same tests
+can run against three different targets:
+
+  * [BankApp](./lib/app/bankApp.js) talks to the domain (via a store)
+  * [BankServer](./lib/web/server/bankServer.js) exposes the same behaviour as
+    a collection of [web routes](./lib/web/server/bankRoutes.js)
+  * [BankDomApp](./lib/client/BankDomApp.js) exposes the same behaviour as a
+    [hyperdom](https://github.com/featurist/hyperdom) browser app
+
 ## Running the tests
 
-Run the tests using the mocha shim:
+Run the core tests using the mocha shim:
 
     ./mocha
 
@@ -34,49 +43,68 @@ Run the tests using the mocha shim:
 as any additional standard mocha arguments.
 
 With no arguments mocha will run all tests against two configurations of the
-app, first directly targeting the domain logic, secondly targeting the HTTP API:
+app, first directly targeting the domain logic, secondly targeting the HTTP API,
+third via the browser app.
+
+The third hexagon pair uses a browser, so it will only run under
+[electron-mocha](https://github.com/jprichardson/electron-mocha) via a similar
+shim:
+
+    ./electron-mocha
 
 ```
-  AccountStore (MemoryAccountStore)
-    ✓ assigns accountNumbers when creating accounts
-    ✓ stores and retrieves accounts
-    ✓ gets different account objects for the same account number
-    ✓ stores copies of accounts
+AccountStore (MemoryAccountStore)
+  ✓ assigns accountNumbers when creating accounts
+  ✓ stores and retrieves accounts
+  ✓ gets different account objects for the same account number
+  ✓ stores copies of accounts
 
-  AccountStore (FlatFileAccountStore)
-    ✓ assigns accountNumbers when creating accounts
-    ✓ stores and retrieves accounts
-    ✓ gets different account objects for the same account number
-    ✓ stores copies of accounts
+AccountStore (FlatFileAccountStore)
+  ✓ assigns accountNumbers when creating accounts
+  ✓ stores and retrieves accounts
+  ✓ gets different account objects for the same account number
+  ✓ stores copies of accounts
 
-  AppCore (MemoryAccountStore)
-    making a transfer
-      ✓ decreases the balance of the sender account
-      ✓ increases the balance of the receiver account
+AppCore (MemoryAccountStore)
+  making a transfer
+    ✓ decreases the balance of the sender account
+    ✓ increases the balance of the receiver account
 
-  AppCore (FlatFileAccountStore)
-    making a transfer
-      ✓ decreases the balance of the sender account
-      ✓ increases the balance of the receiver account
+AppCore (FlatFileAccountStore)
+  making a transfer
+    ✓ decreases the balance of the sender account
+    ✓ increases the balance of the receiver account
 
-  AppViaApi (MemoryAccountStore)
-    making a transfer
-      ✓ decreases the balance of the sender account
-      ✓ increases the balance of the receiver account
+AppViaApi (MemoryAccountStore)
+  making a transfer
+    ✓ decreases the balance of the sender account
+    ✓ increases the balance of the receiver account
 
-  AppViaApi (FlatFileAccountStore)
-    making a transfer
-      ✓ decreases the balance of the sender account
-      ✓ increases the balance of the receiver account
+AppViaApi (FlatFileAccountStore)
+  making a transfer
+    ✓ decreases the balance of the sender account
+    ✓ increases the balance of the receiver account
 
+AppViaDom (MemoryAccountStore)
+  making a transfer
+    ✓ decreases the balance of the sender account (110ms)
+    ✓ increases the balance of the receiver account (115ms)
 
-  16 passing (239ms)
+AppViaDom (FlatFileAccountStore)
+  making a transfer
+    ✓ decreases the balance of the sender account (96ms)
+    ✓ increases the balance of the receiver account (113ms)
+
+20 passing (968ms)
 ```
 
 Use the `-f` flag to run a subset for a particular hexagon-pair:
 
     ./mocha -f Core
+    ./mocha -f Api
+    ./electron-mocha -f Dom
 
 ...or all configurations using a particular `AccountStore` implementation:
 
     ./mocha -f FlatFileAccountStore
+    ./electron-mocha -f MemoryAccountStore

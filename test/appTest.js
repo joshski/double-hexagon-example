@@ -21,8 +21,8 @@ appFactories.forEach(function(appFactory) {
       let sender, receiver
 
       beforeEach(async function () {
-        sender = await client.openAccount()
-        receiver = await client.openAccount()
+        sender = await client.createAccount()
+        receiver = await client.createAccount()
       })
 
       async function makeTransfer () {

@@ -1,13 +1,15 @@
-const http = require('httpism')
-
 class BankApiClient {
-  constructor(bankServerUrl) {
+  constructor(http, bankServerUrl) {
     this.api = http.api(bankServerUrl)
   }
 
-  async openAccount() {
+  async createAccount() {
     const response = await this.api.put('accounts')
     return new AccountApiClient(await this.api.get(response.headers.location))
+  }
+
+  async getAccount(accountNumber) {
+    return new AccountApiClient(await this.api.get(`accounts/${accountNumber}/`))
   }
 }
 
@@ -15,6 +17,7 @@ class AccountApiClient {
   constructor(api) {
     this.api = api
     this.accountNumber = api.body.accountNumber
+    this.balance = api.body.balance
   }
 
   async deposit(amount) {

@@ -11,11 +11,11 @@
   "author": "@joshski",
   "license": "MIT",
   "devDependencies": {
-    "httpism": "^2.7.0",
-    "mocha": "^3.2.0"
+    "httpism": "3.2.0",
+    "mocha": "3.4.2"
   },
   "dependencies": {
-    "body-parser": "^1.17.0",
-    "express": "^4.15.0"
+    "body-parser": "1.17.2",
+    "express": "4.15.3"
   }
 }
